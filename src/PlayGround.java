@@ -23,6 +23,8 @@ public class PlayGround {
             final int imageGrassHeight = imageGrass.getHeight(null);
             final int imageRockWidth = imageRock.getWidth(null);
             final int imageRockHeight = imageRock.getHeight(null);
+            final int imageTrapWidth = imageTrap.getWidth(null);
+            final int imageTrapHeight = imageTrap.getHeight(null);
 
             BufferedReader bufferedReader = new BufferedReader(new FileReader(pathName));
             String line=bufferedReader.readLine();
@@ -41,6 +43,9 @@ public class PlayGround {
                         case 'R' : environment.add(new SolidSprite( ImageIO.read(new File("./tiles/rock.png")), columnNumber*imageRockWidth,
                                     lineNumber*imageRockHeight, imageRockWidth, imageRockHeight));
                         break;
+                        case 'X' : environment.add(new Sprite( ImageIO.read(new File("./tiles/trap.png")), columnNumber*imageRockWidth,
+                                lineNumber*imageTrapHeight, imageTrapWidth, imageTrapHeight));
+
                         }
                         columnNumber++;
                     }

@@ -5,11 +5,14 @@ import java.util.ArrayList;
 
 public class DynamicSprite extends SolidSprite{
     protected boolean IsWalking = true;
-    protected double speed = 5;
+    protected double speed = 20;
     protected final int spriteSheetNumberOfColumn = 10;
 
     protected int timeBetweenFrame = 200;
     protected Direction direction;
+
+    protected double lifePoint;
+    protected  double defensePoint;
 
     public DynamicSprite(BufferedImage image, double x, double y, double width, double height) {
         super(image, x, y, width, height);
@@ -77,7 +80,5 @@ public class DynamicSprite extends SolidSprite{
                 (int) (index*width),(int) (attitude*height), (int) ((index+1)*width), (int) ((attitude+1)*height), null );
 
     }
-
-
 
 }

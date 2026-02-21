@@ -13,12 +13,13 @@ public class Main {
     public Main() {
         Arena = new JFrame("Echappe-toi si tu peux !");
         Arena.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Arena.setSize(400, 600);
+        Arena.setSize(600, 625);
 
         WelcomeScreen welcomeScreen = new WelcomeScreen(this);
         Arena.add(welcomeScreen);
         Arena.setVisible(true);
     }
+
 
         public void startGame(){
 
@@ -31,6 +32,7 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
 
         renderEngine = new RenderEngine();
         physicEngine = new PhysicEngine();
@@ -83,6 +85,8 @@ public class Main {
     }
 
     physicEngine.setEnvironment(playGround.getSolidSpriteList());
+    gameEngine.setEnvironment(playGround.getSolidSpriteList());
+
     renderEngine.addToRenderList(hero);
     physicEngine.addMovingSpriteList(hero);
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 public class RenderEngine extends JPanel implements Engine {
     private List<Displayable> renderList;
+
     public RenderEngine(){
         renderList = new ArrayList<>();
     }
