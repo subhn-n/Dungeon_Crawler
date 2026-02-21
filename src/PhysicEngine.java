@@ -16,7 +16,7 @@ public class PhysicEngine implements Engine{
 
     @Override
     public void update() {
-        movingSpriteList.forEach(s -> s.moveIfPossible(environment));
+       // movingSpriteList.forEach(s -> s.moveIfPossible(environment));
     }
 
 
