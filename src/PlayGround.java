@@ -1,8 +1,7 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -12,10 +11,10 @@ public class PlayGround {
 
     public PlayGround (String pathName){
         try{
-            final Image imageTree = ImageIO.read(new File("./tiles/tree.png"));
-            final Image imageGrass = ImageIO.read(new File("./tiles/grass.png"));
-            final Image imageRock = ImageIO.read(new File("./tiles/rock.png"));
-            final Image imageTrap = ImageIO.read(new File("./tiles/trap.png"));
+            final Image imageTree = ImageIO.read(getClass().getResource("/tiles/tree.png"));
+            final Image imageGrass = ImageIO.read(getClass().getResource("/tiles/grass.png"));
+            final Image imageRock = ImageIO.read(getClass().getResource("/tiles/rock.png"));
+            final Image imageTrap = ImageIO.read(getClass().getResource("/tiles/trap.png"));
 
             final int imageTreeWidth = imageTree.getWidth(null);
             final int imageTreeHeight = imageTree.getHeight(null);
@@ -26,7 +25,7 @@ public class PlayGround {
             final int imageTrapWidth = imageTrap.getWidth(null);
             final int imageTrapHeight = imageTrap.getHeight(null);
 
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(pathName));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(pathName)));
             String line=bufferedReader.readLine();
 
             int lineNumber = 0;
@@ -34,16 +33,16 @@ public class PlayGround {
             while (line!= null){
                 for (byte element : line.getBytes(StandardCharsets.UTF_8)){
                     switch (element){
-                        case 'T' : environment.add(new SolidSprite(ImageIO.read(new File("./tiles/tree.png")), columnNumber*imageTreeWidth,
+                        case 'T' : environment.add(new SolidSprite(ImageIO.read(getClass().getResource("/tiles/tree.png")), columnNumber*imageTreeWidth,
                                     lineNumber*imageTreeHeight, imageTreeWidth, imageTreeHeight));
                         break;
-                        case ' ' : environment.add(new Sprite( ImageIO.read(new File("./tiles/grass.png")), columnNumber*imageGrassWidth,
+                        case ' ' : environment.add(new Sprite( ImageIO.read(getClass().getResource("/tiles/grass.png")), columnNumber*imageGrassWidth,
                                     lineNumber*imageGrassHeight, imageGrassWidth, imageGrassHeight));
                         break;
-                        case 'R' : environment.add(new SolidSprite( ImageIO.read(new File("./tiles/rock.png")), columnNumber*imageRockWidth,
+                        case 'R' : environment.add(new SolidSprite( ImageIO.read(getClass().getResource("/tiles/rock.png")), columnNumber*imageRockWidth,
                                     lineNumber*imageRockHeight, imageRockWidth, imageRockHeight));
                         break;
-                        case 'X' : environment.add(new Sprite( ImageIO.read(new File("./tiles/trap.png")), columnNumber*imageRockWidth,
+                        case 'X' : environment.add(new Sprite( ImageIO.read(getClass().getResource("/tiles/trap.png")), columnNumber*imageRockWidth,
                                 lineNumber*imageTrapHeight, imageTrapWidth, imageTrapHeight));
 
                         }

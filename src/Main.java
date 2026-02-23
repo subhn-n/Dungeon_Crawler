@@ -1,6 +1,5 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -9,11 +8,15 @@ public class Main {
     RenderEngine renderEngine;
     PhysicEngine physicEngine;
     GameEngine gameEngine;
+    GameContext context;
 
-    public Main() {
+    public Main(GameContext context) {
+
+        this.context= context;
+
         Arena = new JFrame("Echappe-toi si tu peux !");
         Arena.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Arena.setSize(600, 625);
+        Arena.setSize(context.getWindowWidth(), context.getWindowHeight());
 
         WelcomeScreen welcomeScreen = new WelcomeScreen(this);
         Arena.add(welcomeScreen);
@@ -27,14 +30,14 @@ public class Main {
         DynamicSprite hero = null;
         try {
             hero = new DynamicSprite(
-                    ImageIO.read(new File("./tiles/heroTileSheetLowRes.png")), 200,300,48,50);
+                    ImageIO.read(getClass().getResource("/tiles/heroTileSheetLowRes.png")), 200,300,48,50);
             hero.setDirection(Direction.SOUTH);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
 
-        renderEngine = new RenderEngine();
+        renderEngine = new RenderEngine(hero, context);
         physicEngine = new PhysicEngine();
         gameEngine = new GameEngine(hero);
 
@@ -79,7 +82,7 @@ public class Main {
 //        physicEngine.setEnvironment(new ArrayList<Sprite>(decor));
 //    }
 
-    PlayGround playGround = new PlayGround("./tiles/level1.txt");
+    PlayGround playGround = new PlayGround("/tiles/level1.txt");
     for (Displayable d: playGround.getSpriteList()){
         renderEngine.addToRenderList(d);
     }
@@ -97,7 +100,10 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception{
-        Main main = new Main();
+        Level level1 = new Level(14*64, 9*64);
+        GameContext context = new GameContext(600, 625);
+        context.LoadLevel(level1);
+        Main main = new Main(context);
 
 
     }
