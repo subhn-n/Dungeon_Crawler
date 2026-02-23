@@ -15,7 +15,7 @@ public class WelcomeScreen extends JPanel {
     public WelcomeScreen(Main main){
         this.main = main;
         try{
-            background = ImageIO.read(new File("./tiles/dungeonWelcome.jpeg"));
+            background = ImageIO.read(getClass().getResource("./tiles/dungeonWelcome.jpeg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,7 +36,6 @@ public class WelcomeScreen extends JPanel {
         }catch (Exception e){
             e.printStackTrace();
         }
-
 
         title.setForeground(new Color(100, 255, 100));
         //title.setForeground(new Color(120, 255, 120));
