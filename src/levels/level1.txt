@@ -1,8 +1,8 @@
 TTTTTTTTTTTTTT
 T    T   R T T
 T RX TTTTTTTTT
-T    TTT XXXXT
-T   R TTX    T
+T    TTT XXXXG
+T   R TTX    G
 T    TTT XXX T
 T           XT
 T  RTTTTXXXX T

@@ -8,6 +8,10 @@ public class RenderEngine extends JPanel implements Engine {
     private List<Displayable> renderList;
     private DynamicSprite hero;
     private GameContext context;
+    private long lastTime = System.nanoTime();
+    //private double sumDelta = 0;
+    private int frameCount = 0;
+    private int fpsDisplay = 0;
 
 
     public RenderEngine( DynamicSprite hero, GameContext context){
@@ -24,16 +28,17 @@ public class RenderEngine extends JPanel implements Engine {
         renderList.add(d);
     }
 
+    public void clearSprites(){
+        this.renderList.clear();
+    }
+
     @Override
     public void update(){
         repaint();
     }
 
-    @Override
-    public void paint(Graphics g){
-        super.paint(g);
-        Graphics2D g2d = (Graphics2D) g;
 
+    private void centerOnHero(Graphics2D g2d){
         int mapWidth= context.getMapWidth();
         int mapHeight= context.getMapHeight();
 
@@ -53,9 +58,42 @@ public class RenderEngine extends JPanel implements Engine {
         if (camX < minX) camX = minX;
         if (camY < minY) camY = minY;
 
-        // AffineTransform oldTransform = g2d.getTransform();
         g2d.translate(camX, camY);
+    }
+
+    private void updateFPS(){
+        long now = System.nanoTime();
+        double deltaTime = (now - lastTime) * 1e-9;
+        // sumDelta+= deltaTime;
+        frameCount++;
+        lastTime= now;
+        if (frameCount >= 20){
+            fpsDisplay = (int) (1.0/ deltaTime);
+          //  sumDelta = 0;
+            frameCount= 0;
+        }
+    }
+
+
+
+    private void drawFPS(Graphics2D g2d){
+        Font fontFPS = new Font("Arial", Font.BOLD, 26);
+        g2d.setFont(fontFPS);
+        g2d.setColor(Color.YELLOW);
+        g2d.drawString("FPS : " + fpsDisplay, 500, 30);
+    }
+
+    @Override
+    public void paint(Graphics g){
+        super.paint(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        updateFPS();
+        AffineTransform oldTransform = g2d.getTransform();
+        centerOnHero(g2d);
         renderList.forEach(v->v.draw(g2d));
+        g2d.setTransform(oldTransform);
+        drawFPS(g2d);
     }
 
 }
