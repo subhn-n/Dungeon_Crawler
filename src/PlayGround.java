@@ -36,7 +36,8 @@ public class PlayGround {
                         case 'T' : environment.add(new SolidSprite(ImageIO.read(getClass().getResource("/tiles/tree.png")), columnNumber*imageTreeWidth,
                                     lineNumber*imageTreeHeight, imageTreeWidth, imageTreeHeight));
                         break;
-                        case ' ' : environment.add(new Sprite( ImageIO.read(getClass().getResource("/tiles/grass.png")), columnNumber*imageGrassWidth,
+                        case ' ' :
+                        case 'G': environment.add(new Sprite( ImageIO.read(getClass().getResource("/tiles/grass.png")), columnNumber*imageGrassWidth,
                                     lineNumber*imageGrassHeight, imageGrassWidth, imageGrassHeight));
                         break;
                         case 'R' : environment.add(new SolidSprite( ImageIO.read(getClass().getResource("/tiles/rock.png")), columnNumber*imageRockWidth,
@@ -73,6 +74,5 @@ public class PlayGround {
             }
             return displayableArrayList;
         }
-
 
 }

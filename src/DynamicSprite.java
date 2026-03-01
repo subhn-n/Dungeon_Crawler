@@ -18,13 +18,13 @@ public class DynamicSprite extends SolidSprite{
         super(image, x, y, width, height);
     }
 
-    public double getX(){
-        return this.x;
-    }
+    public double getX(){return this.x;}
 
-    public double getY(){
-        return this.y;
-    }
+    public double getY(){return this.y;}
+
+    public void setX(int x){this.x = x;}
+    public void setY(int x){this.y = y;}
+
 
 
     public void setDirection(Direction direction) {
@@ -89,5 +89,6 @@ public class DynamicSprite extends SolidSprite{
                 (int) (index*width),(int) (attitude*height), (int) ((index+1)*width), (int) ((attitude+1)*height), null );
 
     }
+
 
 }

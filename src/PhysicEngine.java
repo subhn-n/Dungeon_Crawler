@@ -13,6 +13,11 @@ public class PhysicEngine implements Engine{
         this.environment = environment;
     }
 
+    public void clearSprites(){
+        movingSpriteList.clear();
+        //environment.clear();
+    }
+
 
     @Override
     public void update() {
