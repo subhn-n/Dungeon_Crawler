@@ -43,13 +43,15 @@ public class Door implements Displayable {
 
     public void triggerLevelChange(){
         String nextLevelPath = context.loadNextLevel();
-        if (nextLevelPath!= null){
+        if (nextLevelPath!= null) {
             main.loadLevel(nextLevelPath);
             updatePositionBasedOnLevel();
+            this.currentFrames = 0;
+            this.isAnimating = false;
+        }else {
+            this.currentFrames = 0;
+            main.triggerWinScreen();
         }
-
-        this.currentFrames= 0;
-        this.isAnimating=false;
     }
 
 

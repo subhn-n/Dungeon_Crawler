@@ -15,7 +15,7 @@ public class WelcomeScreen extends JPanel {
     public WelcomeScreen(Main main){
         this.main = main;
         try{
-            background = ImageIO.read(getClass().getResource("./tiles/dungeonWelcome.jpeg"));
+            background = ImageIO.read(getClass().getResource("./background/dungeonWelcome.jpeg"));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -8,6 +8,8 @@ public class GameContext{
     private int currentLevelIndex = 0;
     private int mapWidth;
     private int mapHeight;
+    private int remainingSeconds =10;
+    private boolean isTimeUp = false;
 
     public GameContext(int w, int h){
         this.windowWidth = w;
@@ -32,6 +34,31 @@ public class GameContext{
         return null;
     }
 
+    public void decreaseSeconds(){
+        if (remainingSeconds > 0) {
+            remainingSeconds--;
+        }else{
+            isTimeUp= true;
+        }
+    }
+
+    public String timeIntoString(){
+        int minutes = (remainingSeconds / 60);
+        int seconds= (remainingSeconds %60);
+        return String.format("%02d:%02d", minutes,seconds);
+    }
+
+    public boolean isTimeUp(){
+        return isTimeUp;
+    }
+
+    public void reset(int minutes){
+        this.remainingSeconds= 60*minutes;
+        this.isTimeUp= false;
+        this.currentLevelIndex=0;
+    }
+
+
     public void setLevels(ArrayList<Level> levels) {this.levels = levels;}
 
     public Level getCurrentLevel() {return currentLevel;}
@@ -44,5 +71,8 @@ public class GameContext{
 
     public int getMapHeight() {return mapHeight;}
 
-    }
+    public int getRemainingSeconds() {return remainingSeconds;}
+
+
+}
 
