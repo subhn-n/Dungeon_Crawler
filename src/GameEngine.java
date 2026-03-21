@@ -29,6 +29,7 @@ public class GameEngine implements Engine, KeyListener {
         return doorHitbox.intersects(hero.getHitbox());
     }
 
+
     @Override
     public void update() {
         Door currentDoor = context.getCurrentLevel().getDoor();

@@ -4,13 +4,15 @@ public class Level {
     private Door door;
     private String exitSide ="RIGHT";
     private String path;
+    private String name;
 
-    public Level(int mapWidth, int mapHeight, Door door, String exitSide, String path) {
+    public Level(int mapWidth, int mapHeight, Door door, String exitSide, String path, String name) {
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.door = door;
         this.exitSide= exitSide;
         this.path= path;
+        this.name=name;
     }
 
 
@@ -26,4 +28,5 @@ public class Level {
 
     public String getPath() {return path;}
 
+    public String getName() {return name;}
 }
