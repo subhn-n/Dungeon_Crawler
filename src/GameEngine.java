@@ -9,10 +9,13 @@ public class GameEngine implements Engine, KeyListener {
     ArrayList<Sprite> environment = new ArrayList<>();
     private boolean downPressed, leftPressed, upPressed, rightPressed;
     private GameContext context;
+    private Main main;
 
-    public GameEngine(DynamicSprite hero, GameContext context) {
+    public GameEngine(DynamicSprite hero, GameContext context, Main main) {
         this.hero = hero;
         this.context= context;
+        this.main= main;
+
     }
 
     public void setEnvironment(ArrayList<Sprite> environment) {
@@ -46,6 +49,10 @@ public class GameEngine implements Engine, KeyListener {
 
         if (heroTouchesDoor()){
             currentDoor.startOpening();
+        }
+
+        if (hero.getCurrentHealth() == 0) {
+            main.triggerGameOver();
         }
 
     }

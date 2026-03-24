@@ -1,7 +1,4 @@
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -19,6 +16,8 @@ public class Main {
     Timer physicTimer;
     Level level1;
     Door gate;
+    PlayGround playGround;
+
 
 
     public Main(GameContext context) throws IOException {
@@ -62,7 +61,7 @@ public class Main {
         hero = null;
         try {
             hero = new DynamicSprite(
-                    ImageIO.read(getClass().getResource("/tiles/heroTileSheetLowRes.png")), 200,300,48,50);
+                    ImageIO.read(getClass().getResource("/tiles/heroTileSheetLowRes.png")), 200,300,48,50, this);
             hero.setDirection(Direction.SOUTH);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -71,7 +70,7 @@ public class Main {
 
         renderEngine = new RenderEngine(hero, context, this);
         physicEngine = new PhysicEngine();
-        gameEngine = new GameEngine(hero, context);
+        gameEngine = new GameEngine(hero, context, this);
 
         renderTimer = new Timer(50,(time)-> renderEngine.update());
         physicTimer = new Timer(50,(time)-> physicEngine.update());
@@ -102,7 +101,7 @@ public class Main {
         physicEngine.clearSprites();
         //gameEngine.clearSprites();
 
-        PlayGround playGround = new PlayGround(pathname);
+        playGround = new PlayGround(pathname);
         for (Displayable d: playGround.getSpriteList()){
             renderEngine.addToRenderList(d);
         }
@@ -121,22 +120,11 @@ public class Main {
     }
 
 
-    private void playStartSound(String pathname){
-        try {
-            AudioInputStream endGameSound = AudioSystem.getAudioInputStream(
-                    getClass().getResource(pathname));
-            Clip clip = AudioSystem.getClip();
-            clip.open(endGameSound);
-            clip.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void triggerGameOver(){
         if(gameTimer != null) gameTimer.stop();
         renderEngine.setCurrentState(GameState.GAME_OVER);
-        playStartSound("/Son/gameOver.wav");
+        SoundDisplay.play("/Son/gameOver.wav");
         renderEngine.repaint();
 
     }
@@ -144,7 +132,8 @@ public class Main {
     public void triggerWinScreen(){
         if(gameTimer != null) gameTimer.stop();
         renderEngine.setCurrentState(GameState.WIN);
-        playStartSound("/Son/gameFinished.wav");
+        SoundDisplay.play("/Son/gameFinished.wav");
+        //playStartSound("/Son/gameFinished.wav");
         renderEngine.repaint();
     }
 
@@ -169,6 +158,19 @@ public class Main {
 
     }
 
+    public void removeSprite(Sprite s){
+        playGround.getSolidSpriteList().remove(s);
+        playGround.getSpriteList().remove(s);
+        renderEngine.getRenderList().remove((Displayable) s);
+        try {
+            Sprite grass = new Sprite( ImageIO.read(getClass().getResource("/tiles/grass.png")), s.getX(),
+                    s.getY(), 64, 64);
+            renderEngine.addToRenderListAt(0, grass);
+            playGround.getSpriteList().add(grass);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public static void main(String[] args) throws Exception{
