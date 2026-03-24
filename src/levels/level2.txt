@@ -1,7 +1,7 @@
 TTTTTTTTTTTTTT
-T            T
-T RX        TT
-T        XXXXG
+T          RHR
+T RX         T
+T        X   G
 T       X    G
 T    TTT XXX T
 T           XT

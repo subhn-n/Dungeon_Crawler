@@ -26,4 +26,8 @@ public class Sprite implements Displayable {
     public Rectangle2D.Double getHitbox(){
         return new Rectangle2D.Double(x, y, width, height);
     }
+
+    public double getX() {return this.x;}
+    public double getY() {return this.y;}
+
 }

@@ -19,6 +19,10 @@ public class RenderEngine extends JPanel implements Engine {
     private Main main;
     private JButton retryButton;
     private ImageIcon retryIcon;
+    private BufferedImage[] healthBarRows = new BufferedImage[5];
+    private final int marginLeft= 10;
+    private final int marginUp= 40;
+
 
 
     public RenderEngine( DynamicSprite hero, GameContext context, Main main){
@@ -57,15 +61,36 @@ public class RenderEngine extends JPanel implements Engine {
         buttonPanel.add(retryButton);
         this.add(buttonPanel, BorderLayout.SOUTH);
 
+
+        try{
+            BufferedImage heartSpriteSheet = ImageIO.read(getClass().getResource("/tiles/health2.png"));
+            int rowWidth = 160;
+            int rowHeight = heartSpriteSheet.getHeight()/5;
+            for (int row = 0; row < 5; row++) {
+                healthBarRows[row]= heartSpriteSheet.getSubimage(0, row* rowHeight, rowWidth, rowHeight);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
 
+    public List<Displayable> getRenderList() {return renderList;}
 
     public void setRenderList(List<Displayable> renderList) {this.renderList = renderList;}
 
-    public void addToRenderList(Displayable d){
-        renderList.add(d);
+    public void addToRenderList(Displayable d){renderList.add(d);}
+
+    public  void addToRenderListAt(int index, Displayable d){
+        if(index >= 0 && index <= this.renderList.size()){
+            this.renderList.add(index, d);
+        }else{
+            this.renderList.add(d);
+            System.out.println("Attention: Index invalide pour renderList, ajout à la fin.");
+        }
     }
+
 
     public void clearSprites(){
         this.renderList.clear();
@@ -179,13 +204,22 @@ public class RenderEngine extends JPanel implements Engine {
         this.currentState = currentState;
     }
 
+    private void drawHealthBar(Graphics2D g2d){
+        int life = hero.getCurrentHealth();
+        if(life > 0 && life <= 5){
+            int rowIndex= 5-life;
+            if (healthBarRows[rowIndex]!= null){
+                g2d.drawImage(healthBarRows[rowIndex], marginLeft, marginUp, null);
+            }
+        }
+    }
+
+
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
        if(currentState == GameState.PLAYING){
-        //super.paint(g);
-        drawTimer(g2d);
         updateFPS_Timer();
         AffineTransform oldTransform = g2d.getTransform();
         centerOnHero(g2d);
@@ -194,7 +228,9 @@ public class RenderEngine extends JPanel implements Engine {
         drawFPS(g2d);
         drawLevelName(g2d);
         drawTimer(g2d);
+        drawHealthBar(g2d);
         retryButton.setVisible(false);
+
        }
        else{
            drawEndScreen(g2d);

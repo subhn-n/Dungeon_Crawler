@@ -1,7 +1,4 @@
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -23,9 +20,7 @@ public class WelcomeScreen extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(Color.GRAY);
 
-        JLabel title = new JLabel("ECHAPPE TOI SI TU PEUX !"
-                //"<html><div style='text-align: center;'>ECHAPPE TOI<br>SI TU PEUX !</div></html>"
-                 );
+        JLabel title = new JLabel("ECHAPPE TOI SI TU PEUX !");
 
         Font gameFont = null;
         try {
@@ -70,7 +65,7 @@ public class WelcomeScreen extends JPanel {
 
 
         start.addActionListener(e ->
-        {   playStartSound();
+        {   SoundDisplay.play("/Son/startGame.wav");
             blinkTimer.stop();
             getParent().remove(this);
             main.startGame();
@@ -79,17 +74,6 @@ public class WelcomeScreen extends JPanel {
 
     }
 
-    private void playStartSound(){
-        try {
-            AudioInputStream startGameSound = AudioSystem.getAudioInputStream(
-                    getClass().getResource("/Son/startGame.wav"));
-            Clip clip = AudioSystem.getClip();
-            clip.open(startGameSound);
-            clip.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void paintComponent(Graphics g){
