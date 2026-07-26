@@ -1,6 +1,8 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -57,11 +59,13 @@ public class Main {
 
         public void startGame(){
 
-
         hero = null;
+         BufferedImage attackSpriteSheet= null;
         try {
+            attackSpriteSheet = ImageIO.read(getClass().getResource("/tiles/swordSheet.png"));
             hero = new DynamicSprite(
-                    ImageIO.read(getClass().getResource("/tiles/heroTileSheetLowRes.png")), 200,300,48,50, this);
+                    ImageIO.read(getClass().getResource("/tiles/heroTileSheetLowRes.png")), 200,300,48,50, this, attackSpriteSheet
+            );
             hero.setDirection(Direction.SOUTH);
         } catch (IOException e) {
             throw new RuntimeException(e);
