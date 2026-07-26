@@ -1,0 +1,43 @@
+name: Build Dungeon Crawler
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build with Gradle
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Configurer Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Autoriser l’exécution du Gradle Wrapper
+        run: chmod +x gradlew
+
+      - name: Compiler le projet
+        run: ./gradlew clean build
+
+      - name: Enregistrer le JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dungeon-Crawler
+          path: build/libs/Dungeon-Crawler.jar
+          if-no-files-found: error

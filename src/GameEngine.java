@@ -82,6 +82,10 @@ public class GameEngine implements Engine, KeyListener {
                 hero.setDirection(Direction.EAST);
                 rightPressed = true;
                 break;
+            case KeyEvent.VK_SPACE:
+                //hero.startAttack();
+                hero.setAttacking(!(hero.isAttacking()));
+                break;
         }
 
     }

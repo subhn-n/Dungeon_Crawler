@@ -18,11 +18,17 @@ public class DynamicSprite extends SolidSprite{
     protected final long INVULNERABILITY_DURATION = 2000;
     private Main main;
 
+    private boolean isAttacking = false;
+    private int attackFrameIndex = 0;
+    private int attackTimer = 0;
+    private BufferedImage attackSpriteSheet;
 
 
-    public DynamicSprite(BufferedImage image, double x, double y, double width, double height, Main main) {
+
+    public DynamicSprite(BufferedImage image, double x, double y, double width, double height, Main main, BufferedImage attackSpriteSheet) {
         super(image, x, y, width, height);
         this.main= main;
+        this.attackSpriteSheet = attackSpriteSheet;
     }
 
     //public double getX(){return this.x;}
@@ -163,6 +169,32 @@ public class DynamicSprite extends SolidSprite{
 
     }
 
+public void tickAttack(){
+        if(isAttacking){
+            attackTimer ++;
+            if (attackTimer % 3 ==0){
+                attackFrameIndex++;
+            }
+            if( attackTimer >= 4){
+                isAttacking = false;
+                attackTimer = 0;
+                attackFrameIndex = 0;
+            }
+        }
+}
+
+public void startAttack(){
+        if(!isAttacking){
+            isAttacking = true;
+            attackTimer = 0;
+            attackFrameIndex = 0;
+        }
+}
+
+    public void setAttacking(boolean isAttacking) {this.isAttacking = isAttacking;}
+
+    public boolean isAttacking() {return isAttacking;}
+
 
     @Override
     public void draw(Graphics g){
@@ -171,6 +203,39 @@ public class DynamicSprite extends SolidSprite{
         int attitude = direction.getFrameLineNumber();
         g.drawImage(image, (int) x, (int) y, (int) (x+ width), (int) (y+height),
                 (int) (index*width),(int) (attitude*height), (int) ((index+1)*width), (int) ((attitude+1)*height), null );
+        if(isAttacking && attackSpriteSheet != null){
+            int lineY = this.direction.getFrameLineNumber()*64;
+            int columnX = this.attackFrameIndex * 64;
+            try{
+                BufferedImage currentSwordFrame = attackSpriteSheet.getSubimage(columnX, lineY, 64, 64);
+                int offsetX = 0;
+                int offsetY = 0;
+
+                switch (direction){
+                    case SOUTH:
+                        offsetX = 0;
+                        offsetY = 0;
+                        break;
+                    case WEST:
+                        offsetX = -20;
+                        offsetY = 0;
+                        break;
+                    case NORTH:
+                        offsetX = 0;
+                        offsetY = 0;
+                        break;
+                    case EAST:
+                        offsetX = 10;
+                        offsetY = 0;
+                        break;
+                }
+
+
+                g.drawImage(currentSwordFrame, (int) (this.x + offsetX), (int) (this.y + offsetY), null);
+            }catch (Exception e){
+                System.err.println("Erreur au niveau de l'épée :" + e.getMessage());
+            }
+        }
 
     }
 

@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'fr.dungeoncrawler'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+application {
+    mainClass = 'Main'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+
+        resources {
+            srcDirs = ['src']
+
+            include 'Font/**'
+            include 'Son/**'
+            include 'background/**'
+            include 'door/**'
+            include 'levels/**'
+            include 'tiles/**'
+        }
+    }
+}
+
+jar {
+    archiveBaseName = 'Dungeon-Crawler'
+    archiveVersion = ''
+
+    manifest {
+        attributes(
+            'Main-Class': application.mainClass.get()
+        )
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
