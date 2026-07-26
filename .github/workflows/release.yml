@@ -1,0 +1,48 @@
+name: Release Dungeon Crawler
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v6
+
+      - name: Installer Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Configurer Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Autoriser le Gradle Wrapper
+        run: chmod +x gradlew
+
+      - name: Compiler le projet
+        run: ./gradlew clean build
+
+      - name: Renommer le JAR avec la version
+        run: |
+          cp build/libs/Dungeon-Crawler.jar \
+             "build/libs/Dungeon-Crawler-${GITHUB_REF_NAME}.jar"
+
+      - name: Créer la Release GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            "build/libs/Dungeon-Crawler-${GITHUB_REF_NAME}.jar" \
+            --title "Dungeon Crawler ${GITHUB_REF_NAME}" \
+            --generate-notes \
+            --verify-tag
