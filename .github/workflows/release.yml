@@ -9,40 +9,114 @@ permissions:
   contents: write
 
 jobs:
-  release:
-    name: Build and publish release
-    runs-on: ubuntu-latest
+  package:
+    name: Package for ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: Windows
+            os: windows-latest
+            archive: zip
+
+          - platform: Linux
+            os: ubuntu-latest
+            archive: tar.gz
+
+          - platform: macOS
+            os: macos-latest
+            archive: zip
 
     steps:
-      - name: Récupérer le dépôt
+      - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Installer Java 21
-        uses: actions/setup-java@v4
+      - name: Set up Java 21
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
 
-      - name: Configurer Gradle
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Autoriser le Gradle Wrapper
+      - name: Make Gradle Wrapper executable
+        if: runner.os != 'Windows'
         run: chmod +x gradlew
 
-      - name: Compiler le projet
+      - name: Build project
+        shell: bash
         run: ./gradlew clean build
 
-      - name: Renommer le JAR avec la version
+      - name: Create self-contained application
+        shell: bash
         run: |
-          cp build/libs/Dungeon-Crawler.jar \
-             "build/libs/Dungeon-Crawler-${GITHUB_REF_NAME}.jar"
+          jpackage \
+            --type app-image \
+            --name "Dungeon-Crawler" \
+            --input build/libs \
+            --main-jar Dungeon-Crawler.jar \
+            --dest package
 
-      - name: Créer la Release GitHub
+      - name: Create Windows archive
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Compress-Archive `
+            -Path "package/Dungeon-Crawler" `
+            -DestinationPath "Dungeon-Crawler-${{ github.ref_name }}-Windows.zip"
+
+      - name: Create Linux archive
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          tar -czf \
+            "Dungeon-Crawler-${GITHUB_REF_NAME}-Linux.tar.gz" \
+            -C package \
+            Dungeon-Crawler
+
+      - name: Create macOS archive
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent \
+            "package/Dungeon-Crawler.app" \
+            "Dungeon-Crawler-${GITHUB_REF_NAME}-macOS.zip"
+
+      - name: Upload packaged application
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dungeon-Crawler-${{ github.ref_name }}-${{ matrix.platform }}
+          path: |
+            Dungeon-Crawler-${{ github.ref_name }}-Windows.zip
+            Dungeon-Crawler-${{ github.ref_name }}-Linux.tar.gz
+            Dungeon-Crawler-${{ github.ref_name }}-macOS.zip
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    needs: package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download packaged applications
+        uses: actions/download-artifact@v4
+        with:
+          pattern: Dungeon-Crawler-${{ github.ref_name }}-*
+          path: release-files
+          merge-multiple: true
+
+      - name: Display downloaded files
+        run: find release-files -maxdepth 2 -type f
+
+      - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "${GITHUB_REF_NAME}" \
-            "build/libs/Dungeon-Crawler-${GITHUB_REF_NAME}.jar" \
+            release-files/* \
             --title "Dungeon Crawler ${GITHUB_REF_NAME}" \
             --generate-notes \
             --verify-tag
