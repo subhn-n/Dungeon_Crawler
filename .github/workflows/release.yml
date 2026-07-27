@@ -15,19 +15,17 @@ jobs:
 
     strategy:
       fail-fast: false
+
       matrix:
         include:
           - platform: Windows
             os: windows-latest
-            archive: zip
 
           - platform: Linux
             os: ubuntu-latest
-            archive: tar.gz
 
           - platform: macOS
             os: macos-latest
-            archive: zip
 
     steps:
       - name: Checkout repository
@@ -101,6 +99,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
       - name: Download packaged applications
         uses: actions/download-artifact@v4
         with:
